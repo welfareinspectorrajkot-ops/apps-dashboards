@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Apps Dashboard</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f4f8;
+      margin: 0;
+      padding: 0 20px 40px 20px;
+      color: #1e293b;
+    }
+    h1 {
+      text-align: center;
+      margin: 30px 0;
+      color: #1e40af;
+      font-size: 2.5em;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    .tab-button {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      margin: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 10px 10px 0 0;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .tab-button:hover {
+      background-color: #1d4ed8;
+      transform: translateY(-2px);
+    }
+    .tab-button.active {
+      background-color: #1e3a8a;
+      box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+    }
+
+    /* Tab Content Cards */
+    .tab-content {
+      display: none;
+      background: white;
+      padding: 20px;
+      border-radius: 0 15px 15px 15px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      max-width: 1200px;
+      margin: auto;
+      transition: all 0.3s ease;
+    }
+    .tab-content.active {
+      display: block;
+    }
+
+    iframe {
+      width: 100%;
+      height: 600px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    /* Fallback buttons */
+    .fallback-link {
+      display: none;
+      padding: 12px 25px;
+      background-color: #2563eb;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      text-align: center;
+      display: inline-block;
+      transition: all 0.3s ease;
+      margin-bottom: 10px;
+    }
+    .fallback-link:hover {
+      background-color: #1d4ed8;
+      transform: translateY(-2px);
+    }
+
+    /* Notes */
+    .note {
+      font-size: 0.9em;
+      color: #64748b;
+      margin-bottom: 20px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      iframe {
+        height: 500px;
+      }
+      h1 {
+        font-size: 2em;
+      }
+      .tab-button {
+        padding: 10px 15px;
+      }
+    }
+    @media (max-width: 480px) {
+      iframe {
+        height: 400px;
+      }
+      .tab-button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>My Apps Dashboard</h1>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-button active" data-tab="appTab">App</button>
+    <button class="tab-button" data-tab="adminTab">Admin</button>
+  </div>
+
+  <!-- App Tab -->
+  <div id="appTab" class="tab-content active">
+    <iframe src="https://script.google.com/macros/s/AKfycbznE5rVWSJcLdJUjERPmWm8Oxa9XGOkqtSudVZGeiTSYpkdLRh3j2e5kdep5T5tq8rH/exec" id="appFrame"></iframe>
+    <a href="https://script.google.com/macros/s/AKfycbznE5rVWSJcLdJUjERPmWm8Oxa9XGOkqtSudVZGeiTSYpkdLRh3j2e5kdep5T5tq8rH/exec" target="_blank" class="fallback-link" id="appFallback">
+      Open App in New Tab
+    </a>
+    <div class="note">If the iframe above doesn’t load, the button will appear automatically.</div>
+  </div>
+
+  <!-- Admin Tab -->
+  <div id="adminTab" class="tab-content">
+    <iframe src="https://script.google.com/macros/s/AKfycbznE5rVWSJcLdJUjERPmWm8Oxa9XGOkqtSudVZGeiTSYpkdLRh3j2e5kdep5T5tq8rH/exec?admin=1" id="adminFrame"></iframe>
+    <a href="https://script.google.com/macros/s/AKfycbznE5rVWSJcLdJUjERPmWm8Oxa9XGOkqtSudVZGeiTSYpkdLRh3j2e5kdep5T5tq8rH/exec?admin=1" target="_blank" class="fallback-link" id="adminFallback">
+      Open Admin in New Tab
+    </a>
+    <div class="note">If the iframe above doesn’t load, the button will appear automatically.</div>
+  </div>
+
+  <script>
+    // Tab switching
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.getAttribute('data-tab');
+
+        tabButtons.forEach(b => b.classList.remove('active'));
+        tabContents.forEach(tc => tc.classList.remove('active'));
+
+        btn.classList.add('active');
+        document.getElementById(target).classList.add('active');
+      });
+    });
+
+    // Iframe fallback logic
+    function checkIframe(iframeId, fallbackId) {
+      const iframe = document.getElementById(iframeId);
+      const fallback = document.getElementById(fallbackId);
+
+      iframe.addEventListener('error', () => {
+        iframe.style.display = 'none';
+        fallback.style.display = 'inline-block';
+      });
+
+      setTimeout(() => {
+        try {
+          const doc = iframe.contentDocument || iframe.contentWindow.document;
+          if (!doc || !doc.body || doc.body.innerHTML.length === 0) {
+            iframe.style.display = 'none';
+            fallback.style.display = 'inline-block';
+          }
+        } catch (e) {
+          iframe.style.display = 'none';
+          fallback.style.display = 'inline-block';
+        }
+      }, 2000);
+    }
+
+    checkIframe('appFrame', 'appFallback');
+    checkIframe('adminFrame', 'adminFallback');
+  </script>
+
+</body>
+</html>
